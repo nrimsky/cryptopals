@@ -1,5 +1,6 @@
 from part1 import ex1, ex2, ex3, ex4
 from part2 import ex5, hamming, ex6
+from part3 import ex7
 
 
 def test_ex1():
@@ -44,3 +45,7 @@ def test_hamming_distance():
 def test_ex6():
     with open("ans6.txt") as ansfile:
         assert ex6("data6.txt").strip() == ansfile.read().strip()
+
+
+def test_ex7():
+    assert ex7("data7.txt", "YELLOW SUBMARINE") == "ANSWER"
