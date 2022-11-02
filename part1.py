@@ -1,6 +1,5 @@
 from base64 import b64encode
-from constants import LETTER_FREQUENCIES
-from collections import Counter
+from score_function import get_english_score
 
 
 def hex_to_b64(s):
@@ -39,34 +38,17 @@ def hex_str_to_binary(s):
     return bin(int(s, base=16))
 
 
-def score_result(s):
-    if " " not in s:
-        return 0
-    _s = s.upper().replace(" ", "")
-    c = Counter(_s)
-    p = {ch: (freq * 100) / len(_s) for ch, freq in c.items()}
-    tot = 0
-    for k in p.keys():
-        if k in LETTER_FREQUENCIES:
-            tot += p[k] * LETTER_FREQUENCIES[k]
-    return tot / len(_s)
-
-
 def ex3(s, return_score=False):
-    maxi = 0
-    letter = 'A'
-    decoded = ''
-    for _i in range(0, 128):
+    res = []
+    for _i in range(0, 256):
         l = chr(_i)
-        xored = char_xor(s, l.upper().encode('utf-8').hex())
-        res = score_result(xored)
-        if res > maxi:
-            maxi = res
-            letter = l
-            decoded = xored
+        decoded = char_xor(s, l.encode('utf-8').hex())
+        score = get_english_score(decoded)
+        res.append((l, score, decoded))
+    res = sorted(res, key=lambda x: x[1], reverse=True)
     if return_score:
-        return letter, maxi, decoded
-    return letter
+        return res[0]
+    return res[0][0]
 
 
 def ex4(filename):
